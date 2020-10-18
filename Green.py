@@ -33,3 +33,7 @@ class Green:
 			return Bullet(Vector2(self.position.x, self.position.y))
 		else:
 			return None
+
+	@staticmethod
+	def spawn_green(pos):
+		return Green(pos)

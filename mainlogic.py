@@ -18,12 +18,6 @@ green_list = []
 bullets = []
 del_bullets = []
 
-# TEMPORARY
-green_list.append(Green(Vector2(200, 90)))
-green_list.append(Green(Vector2(150, 200)))
-green_list.append(Green(Vector2(100, 300)))
-green_list.append(Green(Vector2(200, 300)))
-
 
 def spawn_red():
 	red_x = random.randint(Red.position_range_x[0], Red.position_range_x[1])
@@ -41,6 +35,11 @@ def mainloop():
 			QUIT()
 		if(event.type == RED_SPAWN):
 			spawn_red()
+		if(event.type == pygame.MOUSEBUTTONUP):
+			if(event.button == 1):
+				if(Vector2.make_vector_from_seq(event.pos).x < SCREENWIDTH // 2):
+					new_green = Green.spawn_green(Vector2(*event.pos))
+					green_list.append(new_green)
 
 	# filling the game display surface
 	game_display.fill(colors.black)
@@ -79,7 +78,6 @@ def mainloop():
 
 	# for loop for despawning bullets if they are out of range
 	for DEL_BULLET in del_bullets:
-		print(DEL_BULLET)
 		del bullets[DEL_BULLET]
 
 	# clearing the del_bullets list

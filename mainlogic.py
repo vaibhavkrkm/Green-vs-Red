@@ -52,6 +52,12 @@ def mainloop():
 		if(is_destroyed):
 			del_red_list.append(i)
 
+	for i, RED in enumerate(red_list):
+		is_destroyed, bullet_index = RED.collide_with_bullet(bullets)
+		if(is_destroyed):
+			del_red_list.append(i)
+			del_bullets.append(bullet_index)
+
 	# for loop for despawning red objects if they are out of range
 	for DEL_RED in del_red_list:
 		del red_list[DEL_RED]

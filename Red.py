@@ -1,5 +1,6 @@
 import pygame
 import colors
+from Bullet import Bullet
 from config import *
 
 
@@ -40,3 +41,11 @@ class Red:
 			return True
 		else:
 			return False
+
+	def collide_with_bullet(self, bullet_list):
+		for i, BULLET in enumerate(bullet_list):
+			if(self.position.x >= BULLET.position.x and self.position.x <= BULLET.position.x + Bullet.width):
+				if(self.position.y >= BULLET.position.y - Red.size and self.position.y <= BULLET.position.y + Bullet.height + Red.size):
+					return True, i
+		else:
+			return False, None

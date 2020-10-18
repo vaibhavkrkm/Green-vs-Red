@@ -1,5 +1,6 @@
 import pygame
 import colors
+from advanced_math import *
 from config import *
 
 
@@ -10,12 +11,13 @@ class Bullet:
 
 	def __init__(self, position):
 		self.position = position
+		self.rect = pygame.Rect(*Vector2.to_tuple(position), Bullet.width, Bullet.height)
 
 	def __repr__(self):
 		return f"({self.position.x})"
 
 	def draw(self, surface):
-		pygame.draw.rect(surface, colors.really_blue, (*self.position.to_tuple(), Bullet.width, Bullet.height))
+		self.rect = pygame.draw.rect(surface, colors.really_blue, (*self.position.to_tuple(), Bullet.width, Bullet.height))
 
 	def move(self):
 		"""

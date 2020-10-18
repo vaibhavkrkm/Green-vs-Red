@@ -1,5 +1,6 @@
 import pygame
 import colors
+import math
 from advanced_math import *
 from config import *
 from Bullet import Bullet
@@ -30,9 +31,16 @@ class Green:
 		self.final_ticks = pygame.time.get_ticks()
 		if(self.final_ticks - self.inital_ticks >= Green.cooldown):
 			self.inital_ticks = self.final_ticks
-			return Bullet(Vector2(self.position.x, self.position.y))
+			return Bullet(Vector2(self.position.x, self.position.y - Bullet.height // 2))
 		else:
 			return None
+
+	def collide_with_red(self, red_list):
+		for RED in red_list:
+			if(math.sqrt((RED.position.x - self.position.x) ** 2 + (RED.position.y - self.position.y) ** 2) < Green.size * 2):
+				return True
+		else:
+			return False
 
 	@staticmethod
 	def spawn_green(pos):

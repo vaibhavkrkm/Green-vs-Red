@@ -6,7 +6,7 @@ CLOCK = pygame.time.Clock()
 
 run = True
 while run:
-	# main logic
+	# main game logic
 	mainlogic.mainloop()
 
 	# updating the display

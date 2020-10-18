@@ -3,7 +3,7 @@ import random
 import colors
 from advanced_math import *
 from config import *
-from Red import Red
+from Red import *
 from Green import Green
 from Bullet import Bullet
 
@@ -14,9 +14,15 @@ pygame.time.set_timer(RED_SPAWN, 1000)
 # game variables
 red_list = []
 del_red_list = []
+
 green_list = []
+del_green_list = []
+
 bullets = []
 del_bullets = []
+
+life = 3
+life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
 
 
 def spawn_red():
@@ -29,6 +35,8 @@ def spawn_red():
 
 
 def mainloop():
+	global life_text, life
+
 	# event section start
 	for event in pygame.event.get():
 		if(event.type == pygame.QUIT):
@@ -44,14 +52,22 @@ def mainloop():
 	# filling the game display surface
 	game_display.fill(colors.black)
 
+	# displaying the text(s)
+	game_display.blit(life_text, (20, 20))
+
 	# for loop for managing red objects
 	for i, RED in enumerate(red_list):
 		RED.draw(game_display)
 		RED.move()
 		is_destroyed = RED.constraints()
-		if(is_destroyed):
+		if(is_destroyed == True):
 			del_red_list.append(i)
+		elif(is_destroyed == "lose-life"):
+			del_red_list.append(i)
+			life -= 1
+			life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
 
+	# for loop for checking if a bullet is colliding with any of the red objects
 	for i, RED in enumerate(red_list):
 		is_destroyed, bullet_index = RED.collide_with_bullet(bullets)
 		if(is_destroyed):
@@ -60,19 +76,14 @@ def mainloop():
 
 	# for loop for despawning red objects if they are out of range
 	for DEL_RED in del_red_list:
-		del red_list[DEL_RED]
+		try:
+			del red_list[DEL_RED]
+		except IndexError:
+			pass
 
 	# clearing the del_red_list
 	del_red_list.clear()
 
-	# for loop for managing green objects
-	for i, GREEN in enumerate(green_list):
-		GREEN.draw(game_display)
-		bullet_result = GREEN.bullet_events()
-		if(bullet_result is not None):
-			bullets.append(bullet_result)
-		else:
-			pass
 	# for loop for bullets
 	for i, BULLET in enumerate(bullets):
 		BULLET.draw(game_display)
@@ -84,7 +95,36 @@ def mainloop():
 
 	# for loop for despawning bullets if they are out of range
 	for DEL_BULLET in del_bullets:
-		del bullets[DEL_BULLET]
+		try:
+			del bullets[DEL_BULLET]
+		except IndexError:
+			pass
 
 	# clearing the del_bullets list
 	del_bullets.clear()
+
+	# for loop for managing green objects
+	for i, GREEN in enumerate(green_list):
+		GREEN.draw(game_display)
+		bullet_result = GREEN.bullet_events()
+		if(bullet_result is not None):
+			bullets.append(bullet_result)
+		else:
+			pass
+		is_destroyed = GREEN.collide_with_red(red_list)
+		if(is_destroyed):
+			del_green_list.append(i)
+
+	# for loop for despawning green objects if they collide with the red objects
+	for DEL_GREEN in del_green_list:
+		try:
+			del green_list[DEL_GREEN]
+		except IndexError:
+			pass
+
+	# clearing the green list
+	del_green_list.clear()
+
+	# checking the life
+	if(life <= 0):
+		print("Gameover!")

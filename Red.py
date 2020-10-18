@@ -35,9 +35,9 @@ class Red:
 		"""
 		Method to check if the red object is out of range or not
 		"""
-		if(self.position.x < 0 - Red.size
-		or self.position.y < 0 - Red.size
-		or self.position.y > SCREENHEIGHT + Red.size):
+		if(self.position.x < 0 - Red.size):
+			return "lose-life"
+		elif(self.position.y < 0 - Red.size or self.position.y > SCREENHEIGHT + Red.size):
 			return True
 		else:
 			return False

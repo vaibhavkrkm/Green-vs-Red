@@ -1,6 +1,7 @@
 import pygame
 import random
 import colors
+import math
 from advanced_math import *
 from config import *
 from Red import *
@@ -21,7 +22,7 @@ del_green_list = []
 bullets = []
 del_bullets = []
 
-life = 3
+life = 10
 life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
 
 
@@ -45,9 +46,20 @@ def mainloop():
 			spawn_red()
 		if(event.type == pygame.MOUSEBUTTONUP):
 			if(event.button == 1):
-				if(Vector2.make_vector_from_seq(event.pos).x < SCREENWIDTH // 2):
+				if(Point.make_point_from_seq(event.pos).x < SCREENWIDTH // 2):
+					# spawning the green object
 					new_green = Green.spawn_green(Vector2(*event.pos))
 					green_list.append(new_green)
+			elif(event.button == 3):
+				for i, GREEN in enumerate(green_list):
+					clicked_point = Point.make_point_from_seq(event.pos)
+					green_pos = GREEN.position
+					green_radius = GREEN.size
+					distance = math.sqrt((green_pos.y - clicked_point.y)**2 + (green_pos.x - clicked_point.x)**2)
+					if(distance < green_radius):
+						# despawning the green object
+						del_green_list.append(i)
+						break
 
 	# filling the game display surface
 	game_display.fill(colors.black)

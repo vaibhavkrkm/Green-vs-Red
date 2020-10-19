@@ -34,6 +34,29 @@ score_timer = 50
 initial_ticks = pygame.time.get_ticks()
 
 
+def reset_game():
+	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks, red_list, del_red_list, green_list, del_green_list, bullets, del_bullets
+
+	red_list = []
+	del_red_list = []
+
+	green_list = []
+	del_green_list = []
+
+	bullets = []
+	del_bullets = []
+
+	life = 10
+	points = 80
+	score = 0
+
+	life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
+	points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
+	score_text = GAME_FONT.render(f"Score : {score}", True, colors.earth_green)
+
+	initial_ticks = pygame.time.get_ticks()
+
+
 def spawn_red():
 	red_x = random.randint(Red.position_range_x[0], Red.position_range_x[1])
 	red_y = random.randint(Red.position_range_y[0], Red.position_range_y[1])
@@ -52,6 +75,11 @@ def mainloop():
 			QUIT()
 		if(event.type == RED_SPAWN):
 			spawn_red()
+		if(event.type == pygame.KEYUP):
+			if(event.key == pygame.K_ESCAPE):
+				score_temp = score
+				reset_game()
+				return 0, score_temp
 		if(event.type == pygame.MOUSEBUTTONUP):
 			if(event.button == 1):
 				if(Point.make_point_from_seq(event.pos).x < SCREENWIDTH // 2):
@@ -165,4 +193,8 @@ def mainloop():
 
 	# checking the life
 	if(life <= 0):
-		print("Gameover!")
+		score_temp = score
+		reset_game()
+		return 0, score_temp
+	else:
+		return 1, score

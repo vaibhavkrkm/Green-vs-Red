@@ -8,7 +8,9 @@ SCREENWIDTH = 1280
 SCREENHEIGHT = 600
 FPS = 60
 
-# font
+# font(s)
+TITLE_FONT = pygame.font.SysFont("comicsans", 110)
+VS_FONT = pygame.font.SysFont("comicsans", 80)
 GAME_FONT = pygame.font.SysFont("comicsans", 50)
 
 

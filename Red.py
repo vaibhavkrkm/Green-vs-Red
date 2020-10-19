@@ -11,10 +11,17 @@ class Red:
 	velocity_range_x = [-3, -1]
 	velocity_range_y = [-1, 1]
 	kill_points = 2
-	
+	speed_multiplier = 1.0
+	initial_ticks = pygame.time.get_ticks()
+	speed_timer = 5000
+
 	def __init__(self, position, velocity):
 		self.position = position
-		self.velocity = velocity
+		self.velocity = velocity * round(Red.speed_multiplier)
+		final_ticks = pygame.time.get_ticks()
+		if(final_ticks - Red.initial_ticks >= Red.speed_timer):
+			Red.initial_ticks = final_ticks
+			Red.speed_multiplier += 0.1
 
 	def draw(self, surface):
 		"""

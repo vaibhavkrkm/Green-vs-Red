@@ -24,9 +24,14 @@ del_bullets = []
 
 life = 10
 points = 80
+score = 0
 
 life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
 points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
+score_text = GAME_FONT.render(f"Score : {score}", True, colors.earth_green)
+
+score_timer = 50
+initial_ticks = pygame.time.get_ticks()
 
 
 def spawn_red():
@@ -39,7 +44,7 @@ def spawn_red():
 
 
 def mainloop():
-	global life_text, life, points, points_text
+	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks
 
 	# event section start
 	for event in pygame.event.get():
@@ -77,7 +82,7 @@ def mainloop():
 		RED.draw(game_display)
 		RED.move()
 		is_destroyed = RED.constraints()
-		if(is_destroyed == True):
+		if(is_destroyed is True):
 			del_red_list.append(i)
 		elif(is_destroyed == "lose-life"):
 			del_red_list.append(i)
@@ -90,6 +95,8 @@ def mainloop():
 		if(is_destroyed):
 			points += Red.kill_points
 			points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
+			score += 100
+			score_text = GAME_FONT.render(f"Score : {score}", True, colors.earth_green)
 			del_red_list.append(i)
 			del_bullets.append(bullet_index)
 
@@ -110,6 +117,7 @@ def mainloop():
 		is_destroyed = BULLET.constraints()
 		if(is_destroyed):
 			del_bullets.append(i)
+			break
 
 	# for loop for despawning bullets if they are out of range
 	for DEL_BULLET in del_bullets:
@@ -143,9 +151,17 @@ def mainloop():
 	# clearing the green list
 	del_green_list.clear()
 
+	# incrementing the score
+	final_ticks = pygame.time.get_ticks()
+	if(final_ticks - initial_ticks >= score_timer):
+		initial_ticks = final_ticks
+		score += 1
+		score_text = GAME_FONT.render(f"Score : {score}", True, colors.earth_green)
+
 	# displaying the text(s)
 	game_display.blit(life_text, (20, 20))
 	game_display.blit(points_text, (SCREENWIDTH - 20 - points_text.get_width(), 20))
+	game_display.blit(score_text, (SCREENWIDTH // 2 - points_text.get_width() // 2, 20))
 
 	# checking the life
 	if(life <= 0):

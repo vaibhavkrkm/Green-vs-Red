@@ -8,7 +8,7 @@ from Red import *
 from Green import Green
 from Bullet import Bullet
 
-# user events
+# user event(s)
 RED_SPAWN = pygame.USEREVENT
 pygame.time.set_timer(RED_SPAWN, 1000)
 
@@ -23,7 +23,10 @@ bullets = []
 del_bullets = []
 
 life = 10
+points = 80
+
 life_text = GAME_FONT.render(f"Lives : {life}", True, colors.shady_red)
+points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
 
 
 def spawn_red():
@@ -36,7 +39,7 @@ def spawn_red():
 
 
 def mainloop():
-	global life_text, life
+	global life_text, life, points, points_text
 
 	# event section start
 	for event in pygame.event.get():
@@ -47,9 +50,12 @@ def mainloop():
 		if(event.type == pygame.MOUSEBUTTONUP):
 			if(event.button == 1):
 				if(Point.make_point_from_seq(event.pos).x < SCREENWIDTH // 2):
-					# spawning the green object
-					new_green = Green.spawn_green(Vector2(*event.pos))
-					green_list.append(new_green)
+					if(points >= Green.cost_price):
+						# spawning the green object
+						points -= Green.cost_price
+						points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
+						new_green = Green.spawn_green(Vector2(*event.pos))
+						green_list.append(new_green)
 			elif(event.button == 3):
 				for i, GREEN in enumerate(green_list):
 					clicked_point = Point.make_point_from_seq(event.pos)
@@ -58,14 +64,13 @@ def mainloop():
 					distance = math.sqrt((green_pos.y - clicked_point.y)**2 + (green_pos.x - clicked_point.x)**2)
 					if(distance < green_radius):
 						# despawning the green object
+						points += Green.sell_price
+						points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
 						del_green_list.append(i)
 						break
 
 	# filling the game display surface
 	game_display.fill(colors.black)
-
-	# displaying the text(s)
-	game_display.blit(life_text, (20, 20))
 
 	# for loop for managing red objects
 	for i, RED in enumerate(red_list):
@@ -83,6 +88,8 @@ def mainloop():
 	for i, RED in enumerate(red_list):
 		is_destroyed, bullet_index = RED.collide_with_bullet(bullets)
 		if(is_destroyed):
+			points += Red.kill_points
+			points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
 			del_red_list.append(i)
 			del_bullets.append(bullet_index)
 
@@ -103,7 +110,6 @@ def mainloop():
 		is_destroyed = BULLET.constraints()
 		if(is_destroyed):
 			del_bullets.append(i)
-			break
 
 	# for loop for despawning bullets if they are out of range
 	for DEL_BULLET in del_bullets:
@@ -136,6 +142,10 @@ def mainloop():
 
 	# clearing the green list
 	del_green_list.clear()
+
+	# displaying the text(s)
+	game_display.blit(life_text, (20, 20))
+	game_display.blit(points_text, (SCREENWIDTH - 20 - points_text.get_width(), 20))
 
 	# checking the life
 	if(life <= 0):

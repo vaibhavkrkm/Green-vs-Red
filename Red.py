@@ -10,6 +10,7 @@ class Red:
 	position_range_y = [0 + size, SCREENHEIGHT - size]
 	velocity_range_x = [-3, -1]
 	velocity_range_y = [-1, 1]
+	kill_points = 2
 	
 	def __init__(self, position, velocity):
 		self.position = position

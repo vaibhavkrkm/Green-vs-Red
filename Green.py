@@ -9,6 +9,8 @@ from Bullet import Bullet
 class Green:
 	size = 20
 	cooldown = 1000
+	cost_price = 10
+	sell_price = 5
 
 	def __init__(self, position):
 		self.position = position

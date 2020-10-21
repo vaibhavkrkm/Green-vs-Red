@@ -1,7 +1,9 @@
 import pygame
 import sys
 
+# initializing important pygame functionalities
 pygame.init()
+pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=512)
 
 # configuration variables
 SCREENWIDTH = 1280

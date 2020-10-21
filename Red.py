@@ -8,7 +8,7 @@ class Red:
 	size = 20
 	position_range_x = [SCREENWIDTH + size, SCREENWIDTH + size + 50]
 	position_range_y = [0 + size, SCREENHEIGHT - size]
-	velocity_range_x = [-3, -1]
+	velocity_range_x = [-5, -1]
 	velocity_range_y = [-1, 1]
 	kill_points = 2
 	speed_multiplier = 1.0
@@ -19,9 +19,10 @@ class Red:
 		self.position = position
 		self.velocity = velocity * round(Red.speed_multiplier)
 		final_ticks = pygame.time.get_ticks()
-		if(final_ticks - Red.initial_ticks >= Red.speed_timer):
-			Red.initial_ticks = final_ticks
-			Red.speed_multiplier += 0.1
+		if(Red.speed_multiplier < 10):
+			if(final_ticks - Red.initial_ticks >= Red.speed_timer):
+				Red.initial_ticks = final_ticks
+				Red.speed_multiplier += 0.1
 
 	def draw(self, surface):
 		"""

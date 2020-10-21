@@ -7,10 +7,12 @@ from config import *
 from Red import *
 from Green import Green
 from Bullet import Bullet
+from assets import *
 
 # user event(s)
+red_spawn_timer = 1000
 RED_SPAWN = pygame.USEREVENT
-pygame.time.set_timer(RED_SPAWN, 1000)
+pygame.time.set_timer(RED_SPAWN, red_spawn_timer)
 
 # game variables
 red_list = []
@@ -35,7 +37,13 @@ initial_ticks = pygame.time.get_ticks()
 
 
 def reset_game():
-	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks, red_list, del_red_list, green_list, del_green_list, bullets, del_bullets
+	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks, red_list, del_red_list, green_list, del_green_list, bullets, del_bullets, red_spawn_timer, RED_SPAWN
+
+	red_spawn_timer = 1000
+	RED_SPAWN = pygame.USEREVENT
+	pygame.time.set_timer(RED_SPAWN, red_spawn_timer)
+
+	Red.speed_multiplier = 1.0
 
 	red_list = []
 	del_red_list = []
@@ -67,7 +75,7 @@ def spawn_red():
 
 
 def mainloop():
-	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks
+	global life_text, life, points, points_text, score, score_text, initial_ticks, final_ticks, red_spawn_timer
 
 	# event section start
 	for event in pygame.event.get():
@@ -75,6 +83,9 @@ def mainloop():
 			QUIT()
 		if(event.type == RED_SPAWN):
 			spawn_red()
+			if(red_spawn_timer > 200):
+				red_spawn_timer -= 5
+				pygame.time.set_timer(RED_SPAWN, red_spawn_timer)
 		if(event.type == pygame.KEYUP):
 			if(event.key == pygame.K_ESCAPE):
 				score_temp = score
@@ -121,6 +132,7 @@ def mainloop():
 	for i, RED in enumerate(red_list):
 		is_destroyed, bullet_index = RED.collide_with_bullet(bullets)
 		if(is_destroyed):
+			explosion_sound.play()
 			points += Red.kill_points
 			points_text = GAME_FONT.render(f"Points : {points}", True, colors.bright_pink)
 			score += 100
@@ -195,6 +207,7 @@ def mainloop():
 	if(life <= 0):
 		score_temp = score
 		reset_game()
+		defeat_sound.play()
 		return 0, score_temp
 	else:
 		return 1, score

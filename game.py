@@ -2,6 +2,7 @@ import pygame
 from config import *
 import mainlogic
 import mainmenu
+import howtoplay
 
 CLOCK = pygame.time.Clock()
 
@@ -23,6 +24,9 @@ while run:
 			pygame.mouse.set_cursor(*pygame.cursors.diamond)
 		# main game logic
 		game_state, score = mainlogic.mainloop()
+
+	elif(game_state == 2):
+		game_state = howtoplay.howtoplay()
 
 	# updating the display
 	pygame.display.update()

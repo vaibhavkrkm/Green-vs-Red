@@ -22,6 +22,8 @@ def mainmenu(score=0):
 			if(event.key == pygame.K_SPACE):
 				# start game
 				return 1
+			elif(event.key == pygame.K_h):
+				return 2
 			elif(event.key == pygame.K_ESCAPE):
 				QUIT()
 	# event section end

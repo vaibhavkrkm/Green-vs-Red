@@ -3,6 +3,7 @@ from config import *
 import mainlogic
 import mainmenu
 import howtoplay
+import credits
 
 CLOCK = pygame.time.Clock()
 
@@ -26,7 +27,12 @@ while run:
 		game_state, score = mainlogic.mainloop()
 
 	elif(game_state == 2):
+		# how to play menu
 		game_state = howtoplay.howtoplay()
+
+	elif(game_state == 3):
+		# credits menu
+		game_state = credits.credits()
 
 	# updating the display
 	pygame.display.update()
